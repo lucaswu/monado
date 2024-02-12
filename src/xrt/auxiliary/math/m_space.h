@@ -56,8 +56,10 @@ m_pose_is_identity(const struct xrt_pose *pose)
 static inline void
 m_space_relation_from_pose(const struct xrt_pose *pose, struct xrt_space_relation *out_relation)
 {
-	enum xrt_space_relation_flags flags = (enum xrt_space_relation_flags)(XRT_SPACE_RELATION_ORIENTATION_VALID_BIT |
-	                                                                      XRT_SPACE_RELATION_POSITION_VALID_BIT);
+	enum xrt_space_relation_flags flags =
+	    (enum xrt_space_relation_flags)(XRT_SPACE_RELATION_ORIENTATION_VALID_BIT | //
+	                                    XRT_SPACE_RELATION_POSITION_VALID_BIT |    //
+	                                    XRT_SPACE_RELATION_IS_PURE_POSE);
 	struct xrt_space_relation relation = {
 	    flags,
 	    *pose,

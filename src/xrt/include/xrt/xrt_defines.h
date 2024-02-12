@@ -593,6 +593,7 @@ enum xrt_space_relation_flags
 	XRT_SPACE_RELATION_ANGULAR_VELOCITY_VALID_BIT =     (1u << 3u),
 	XRT_SPACE_RELATION_ORIENTATION_TRACKED_BIT =        (1u << 4u),
 	XRT_SPACE_RELATION_POSITION_TRACKED_BIT =           (1u << 5u),
+	XRT_SPACE_RELATION_IS_PURE_POSE =                   (1u << 6u),
 	// clang-format on
 	XRT_SPACE_RELATION_BITMASK_ALL = (uint32_t)XRT_SPACE_RELATION_ORIENTATION_VALID_BIT |      //
 	                                 (uint32_t)XRT_SPACE_RELATION_POSITION_VALID_BIT |         //
