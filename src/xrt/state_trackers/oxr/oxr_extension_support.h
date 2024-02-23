@@ -180,6 +180,17 @@
 
 
 /*
+ * XR_KHR_locate_spaces
+ */
+#if defined(XR_KHR_locate_spaces)
+#define OXR_HAVE_KHR_locate_spaces
+#define OXR_EXTENSION_SUPPORT_KHR_locate_spaces(_) _(KHR_locate_spaces, KHR_LOCATE_SPACES)
+#else
+#define OXR_EXTENSION_SUPPORT_KHR_locate_spaces(_)
+#endif
+
+
+/*
  * XR_KHR_opengl_enable
  */
 #if defined(XR_KHR_opengl_enable) && defined(XR_USE_GRAPHICS_API_OPENGL)
@@ -418,6 +429,7 @@
 #define OXR_EXTENSION_SUPPORT_FB_composition_layer_settings(_)
 #endif
 
+
 /*
  * XR_FB_composition_layer_depth_test
  */
@@ -428,6 +440,7 @@
 #else
 #define OXR_EXTENSION_SUPPORT_FB_composition_layer_depth_test(_)
 #endif
+
 
 /*
  * XR_FB_display_refresh_rate
@@ -645,6 +658,7 @@
     OXR_EXTENSION_SUPPORT_KHR_D3D12_enable(_) \
     OXR_EXTENSION_SUPPORT_KHR_loader_init(_) \
     OXR_EXTENSION_SUPPORT_KHR_loader_init_android(_) \
+    OXR_EXTENSION_SUPPORT_KHR_locate_spaces(_) \
     OXR_EXTENSION_SUPPORT_KHR_opengl_enable(_) \
     OXR_EXTENSION_SUPPORT_KHR_opengl_es_enable(_) \
     OXR_EXTENSION_SUPPORT_KHR_swapchain_usage_input_attachment_bit(_) \
@@ -666,7 +680,7 @@
     OXR_EXTENSION_SUPPORT_FB_composition_layer_alpha_blend(_) \
     OXR_EXTENSION_SUPPORT_FB_composition_layer_image_layout(_) \
     OXR_EXTENSION_SUPPORT_FB_composition_layer_settings(_) \
-    OXR_EXTENSION_SUPPORT_FB_composition_layer_depth_test(_)  \
+    OXR_EXTENSION_SUPPORT_FB_composition_layer_depth_test(_) \
     OXR_EXTENSION_SUPPORT_FB_display_refresh_rate(_) \
     OXR_EXTENSION_SUPPORT_FB_passthrough(_) \
     OXR_EXTENSION_SUPPORT_ML_ml2_controller_interaction(_) \
