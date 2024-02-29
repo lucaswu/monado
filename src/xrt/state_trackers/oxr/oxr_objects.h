@@ -223,6 +223,7 @@ oxr_instance_to_openxr(struct oxr_instance *inst)
 XrResult
 oxr_instance_create(struct oxr_logger *log,
                     const XrInstanceCreateInfo *createInfo,
+                    XrVersion major_minor,
                     const struct oxr_extension_status *extensions,
                     struct oxr_instance **out_inst);
 
@@ -1512,6 +1513,13 @@ struct oxr_instance
 
 	//! Enabled extensions
 	struct oxr_extension_status extensions;
+
+	//! The OpenXR version requested in the app info. It determines the instance's OpenXR version.
+	struct
+	{
+		//! Stores only major.minor version. Simplifies comparisons for e.g. "at least OpenXR 1.1".
+		XrVersion major_minor;
+	} openxr_version;
 
 	// Hardcoded single system.
 	struct oxr_system system;
