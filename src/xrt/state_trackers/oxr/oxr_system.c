@@ -22,6 +22,7 @@
 #include "oxr_logger.h"
 #include "oxr_two_call.h"
 #include "oxr_chain.h"
+#include "oxr_api_verify.h"
 
 
 DEBUG_GET_ONCE_NUM_OPTION(scale_percentage, "OXR_VIEWPORT_SCALE_PERCENTAGE", 100)
@@ -199,7 +200,7 @@ oxr_system_fill_in(
 	}
 
 #ifdef OXR_HAVE_EXT_local_floor
-	if (sys->inst->extensions.EXT_local_floor) {
+	if (sys->inst->extensions.EXT_local_floor || OXR_API_VERSION_AT_LEAST(sys->inst, 1, 1)) {
 		if (sys->xso->semantic.local_floor != NULL) {
 			sys->reference_spaces[sys->reference_space_count++] = XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT;
 		} else {
