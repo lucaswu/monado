@@ -75,6 +75,7 @@ EXTENSIONS = (
     ['XR_FB_passthrough', 'XRT_FEATURE_OPENXR_LAYER_PASSTHROUGH'],
     ['XR_FB_touch_controller_pro', 'XRT_FEATURE_OPENXR_INTERACTION_TOUCH_PRO'],
     ['XR_FB_touch_controller_proximity', 'XRT_FEATURE_OPENXR_INTERACTION_FB_PROXIMITY'],
+    ['XR_META_touch_controller_plus', 'XRT_FEATURE_OPENXR_INTERACTION_TOUCH_PLUS'],
     ['XR_ML_ml2_controller_interaction', 'XRT_FEATURE_OPENXR_INTERACTION_ML2'],
     ['XR_MND_headless', 'XRT_FEATURE_OPENXR_HEADLESS'],
     ['XR_MND_swapchain_usage_input_attachment_bit'],
