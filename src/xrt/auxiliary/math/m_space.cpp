@@ -285,9 +285,22 @@ m_relation_chain_resolve(const struct xrt_relation_chain *xrc, struct xrt_space_
 		return;
 	}
 
+	bool only_pure_poses = (xrc->steps[0].relation_flags & XRT_SPACE_RELATION_IS_PURE_POSE) != 0;
+
 	struct xrt_space_relation r = xrc->steps[0];
 	for (uint32_t i = 1; i < xrc->step_count; i++) {
 		apply_relation(&r, &xrc->steps[i], &r);
+
+		if ((xrc->steps[i].relation_flags & XRT_SPACE_RELATION_IS_PURE_POSE) == 0) {
+			only_pure_poses = false;
+		}
+	}
+
+	// An xrt_pose that is upgraded to an xrt_space_relation is only VALID, not TRACKED.
+	// apply_relation only introduces TRACKED flags if there is a TRACKED xrt_space_relation in the chain.
+	// If only poses are in the chain, special case their relationship to be fully known/TRACKED.
+	if (only_pure_poses) {
+		r.relation_flags = XRT_SPACE_RELATION_BITMASK_ALL;
 	}
 
 #if 0
