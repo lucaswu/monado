@@ -251,13 +251,20 @@ oxr_xrDestroySpace(XrSpace space)
 	return oxr_handle_destroy(&log, &spc->handle);
 }
 
+static void
+free_spaces(struct oxr_space ***spaces)
+{
+	free(*spaces);
+	*spaces = NULL;
+}
+
 static XrResult
-locate_spaces(XrSession session, const XrSpacesLocateInfo *locateInfo, XrSpaceLocations *spaceLocations)
+locate_spaces(XrSession session, const XrSpacesLocateInfo *locateInfo, XrSpaceLocations *spaceLocations, char *fn)
 {
 	struct oxr_space *spc;
 	struct oxr_space *baseSpc;
 	struct oxr_logger log;
-	OXR_VERIFY_SPACE_AND_INIT_LOG(&log, locateInfo->baseSpace, spc, "xrLocateSpacesKHR");
+	OXR_VERIFY_SPACE_AND_INIT_LOG(&log, locateInfo->baseSpace, spc, fn);
 	OXR_VERIFY_SESSION_NOT_LOST(&log, spc->sess);
 	OXR_VERIFY_ARG_TYPE_AND_NOT_NULL(&log, locateInfo, XR_TYPE_SPACES_LOCATE_INFO_KHR);
 	OXR_VERIFY_ARG_TYPE_AND_NOT_NULL(&log, spaceLocations, XR_TYPE_SPACE_LOCATIONS_KHR);
@@ -289,43 +296,17 @@ locate_spaces(XrSession session, const XrSpacesLocateInfo *locateInfo, XrSpaceLo
 	}
 
 
-	for (uint32_t i = 0; i < locateInfo->spaceCount; i++) {
-		struct oxr_space *s;
-		OXR_VERIFY_SPACE_NOT_NULL(&log, locateInfo->spaces[i], s);
-
-		XrSpaceVelocity v = {
-		    .type = XR_TYPE_SPACE_VELOCITY,
-		    .next = NULL,
-		};
-
-		void *next = NULL;
-		if (velocities) {
-			next = &v;
-		}
-
-		XrSpaceLocation l = {
-		    .type = XR_TYPE_SPACE_LOCATION,
-		    .next = next,
-		};
-
-		XrResult result = oxr_space_locate(&log, s, baseSpc, locateInfo->time, &l);
-
-		if (result == XR_SUCCESS) {
-			spaceLocations->locations[i].locationFlags = l.locationFlags;
-			spaceLocations->locations[i].pose = l.pose;
-
-			if (velocities) {
-				velocities->velocities[i].angularVelocity = v.angularVelocity;
-				velocities->velocities[i].linearVelocity = v.linearVelocity;
-				velocities->velocities[i].velocityFlags = v.velocityFlags;
-			}
-
-		} else {
-			return result;
-		}
+	uint32_t space_count = locateInfo->spaceCount;
+	struct oxr_space **spaces = U_TYPED_ARRAY_CALLOC(struct oxr_space *, space_count);
+	for (uint32_t i = 0; i < space_count; i++) {
+		OXR_VERIFY_SPACE_NOT_NULL(&log, locateInfo->spaces[i], spaces[i]);
 	}
 
-	return XR_SUCCESS;
+	XrResult res = oxr_spaces_locate(&log, spaces, space_count, baseSpc, locateInfo->time, spaceLocations);
+
+	free_spaces(&spaces);
+
+	return res;
 }
 
 #ifdef OXR_HAVE_KHR_locate_spaces
@@ -334,7 +315,7 @@ oxr_xrLocateSpacesKHR(XrSession session, const XrSpacesLocateInfoKHR *locateInfo
 {
 	OXR_TRACE_MARKER();
 
-	return locate_spaces(session, locateInfo, spaceLocations);
+	return locate_spaces(session, locateInfo, spaceLocations, "xrLocateSpacesKHR");
 }
 #endif
 
@@ -343,5 +324,5 @@ oxr_xrLocateSpaces(XrSession session, const XrSpacesLocateInfo *locateInfo, XrSp
 {
 	OXR_TRACE_MARKER();
 
-	return locate_spaces(session, locateInfo, spaceLocations);
+	return locate_spaces(session, locateInfo, spaceLocations, "xrLocateSpaces");
 }
