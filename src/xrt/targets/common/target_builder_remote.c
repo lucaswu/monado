@@ -87,7 +87,7 @@ remote_open_system(struct xrt_builder *xb,
 	uint32_t view_count = 1;
 	if (!get_settings(config, &port, &view_count)) {
 		port = 4242;
-		view_count = 1;
+		view_count = 2;
 	}
 
 	return r_create_devices(port, view_count, broadcast, out_xsysd, out_xso);
