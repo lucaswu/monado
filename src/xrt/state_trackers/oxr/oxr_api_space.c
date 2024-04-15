@@ -255,11 +255,13 @@ oxr_xrDestroySpace(XrSpace space)
 	return oxr_handle_destroy(&log, &spc->handle);
 }
 
-static void
-free_spaces(struct oxr_space ***spaces)
+static XrResult
+verify_space(struct oxr_logger *log, XrSpace space, struct oxr_space **out_space)
 {
-	free(*spaces);
-	*spaces = NULL;
+	struct oxr_space *spc;
+	OXR_VERIFY_SPACE_NOT_NULL(log, space, spc);
+	*out_space = spc;
+	return XR_SUCCESS;
 }
 
 static XrResult
@@ -302,13 +304,20 @@ locate_spaces(XrSession session, const XrSpacesLocateInfo *locateInfo, XrSpaceLo
 
 	uint32_t space_count = locateInfo->spaceCount;
 	struct oxr_space **spaces = U_TYPED_ARRAY_CALLOC(struct oxr_space *, space_count);
+
+	XrResult res;
 	for (uint32_t i = 0; i < space_count; i++) {
-		OXR_VERIFY_SPACE_NOT_NULL(&log, locateInfo->spaces[i], spaces[i]);
+		res = verify_space(&log, locateInfo->spaces[i], &spaces[i]);
+		if (res != XR_SUCCESS) {
+			break;
+		}
 	}
 
-	XrResult res = oxr_spaces_locate(&log, spaces, space_count, baseSpc, locateInfo->time, spaceLocations);
+	if (res == XR_SUCCESS) {
+		res = oxr_spaces_locate(&log, spaces, space_count, baseSpc, locateInfo->time, spaceLocations);
+	}
 
-	free_spaces(&spaces);
+	free(spaces);
 
 	return res;
 }
