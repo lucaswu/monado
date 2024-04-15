@@ -84,7 +84,7 @@ remote_open_system(struct xrt_builder *xb,
 
 
 	int port = 4242;
-	uint32_t view_count = 1;
+	uint32_t view_count = 2;
 	if (!get_settings(config, &port, &view_count)) {
 		port = 4242;
 		view_count = 2;
