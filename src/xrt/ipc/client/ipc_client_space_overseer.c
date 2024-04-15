@@ -171,6 +171,10 @@ locate_spaces(struct xrt_space_overseer *xso,
 	struct ipc_client_space *icsp_base_space = ipc_client_space(base_space);
 
 	uint32_t *space_ids = U_TYPED_ARRAY_CALLOC(uint32_t, space_count);
+	if (space_ids == NULL) {
+		IPC_ERROR(ipc_c, "Failed to allocate space_ids");
+		return XRT_ERROR_ALLOCATION;
+	}
 
 	ipc_client_connection_lock(ipc_c);
 
