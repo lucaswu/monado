@@ -541,11 +541,15 @@ ipc_handle_space_locate_spaces(volatile struct ipc_client_state *ics,
 	}
 
 	for (uint32_t i = 0; i < space_count; i++) {
-		xret = validate_space_id(ics, space_ids[i], &xspaces[i]);
-		if (xret != XRT_SUCCESS) {
-			U_LOG_E("Invalid space_id space_ids[%d] = %d!", i, space_ids[i]);
-			// Client is receiving out_relations now, it will get xret on this receive.
-			goto out_locate_spaces;
+		if (space_ids[i] == UINT32_MAX) {
+			xspaces[i] = NULL;
+		} else {
+			xret = validate_space_id(ics, space_ids[i], &xspaces[i]);
+			if (xret != XRT_SUCCESS) {
+				U_LOG_E("Invalid space_id space_ids[%d] = %d!", i, space_ids[i]);
+				// Client is receiving out_relations now, it will get xret on this receive.
+				goto out_locate_spaces;
+			}
 		}
 	}
 	xret = xrt_space_overseer_locate_spaces( //

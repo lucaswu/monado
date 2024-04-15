@@ -254,13 +254,6 @@ oxr_spaces_locate(struct oxr_logger *log,
 		}
 		struct xrt_space *xt = NULL;
 		ret = get_xrt_space(log, spcs[i], &xt);
-		if (xt == NULL) {
-			if (print) {
-				oxr_slog(&slog, "Attempted to locate unknown space (spaces[%d])!", i);
-				oxr_pp_space_indented(&slog, spcs[i], "space");
-			}
-			oxr_log(log, "Attempted to locate unknown space (spaces[%d])!", i);
-		}
 		xspcs[i] = xt;
 		offsets[i] = spcs[i]->pose;
 	}

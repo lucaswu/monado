@@ -574,6 +574,12 @@ locate_spaces(struct xrt_space_overseer *xso,
 	struct u_space *ubase_space = u_space(base_space);
 
 	for (uint32_t i = 0; i < space_count; i++) {
+		// spaces are allowed to be NULL
+		if (spaces[i] == NULL) {
+			out_relations->relation_flags = XRT_SPACE_RELATION_BITMASK_NONE;
+			continue;
+		}
+
 		// crude optimization: If space ptr is equal to one already located, don't locate again, just copy
 		{
 			int32_t found = find_same_space_before(spaces, offsets, i);

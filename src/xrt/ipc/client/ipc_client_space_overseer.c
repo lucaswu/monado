@@ -179,8 +179,12 @@ locate_spaces(struct xrt_space_overseer *xso,
 	IPC_CHK_WITH_GOTO(ipc_c, xret, "ipc_send_space_locate_spaces_locked", locate_spaces_out);
 
 	for (uint32_t i = 0; i < space_count; i++) {
-		struct ipc_client_space *icsp_space = ipc_client_space(spaces[i]);
-		space_ids[i] = icsp_space->id;
+		if (spaces[i] == NULL) {
+			space_ids[i] = UINT32_MAX;
+		} else {
+			struct ipc_client_space *icsp_space = ipc_client_space(spaces[i]);
+			space_ids[i] = icsp_space->id;
+		}
 	}
 
 	xret = ipc_send(&ipc_c->imc, space_ids, sizeof(uint32_t) * space_count);
